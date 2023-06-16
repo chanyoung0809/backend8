@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 :: <%- data.title %></title>
+</head>
+<body>
+    <div> <%- data.num %></div>
+    <div> <%- data.title %></div>
+    <div> <%- data.author %></div>
+    <!-- 하나만 첨부할 때 -->
+    <!-- <div><img src="/upload/<%# data.attachfile %>"></div> -->
+    <!-- 여러 개 첨부할 때 -->
+    <!-- 여길 div으로 묶으면 줄바꿈없이 하나의 div에 이미지 들어감-->
+    <% data.attachfile.forEach((img, idx) => { %>
+       <div><img src="/upload/<%- img %>"></div> 
+       <!-- 이미지 하나 당 div 하나 하면 이미지마다 줄바꿈 일어남-->
+
+       <!-- 여러 개 다운로드 할 때 -->
+       <!-- <a href="/upload/<%# img %>" download>다운로드</a> -->
+    <% }) %>
+
+    <!-- 첨부파일 다운로드 a 태그에는 download 속성 붙여야 함 -->
+    <!-- href는 저장된 폴더 위치에 파일명까지 써놔야 함 -->
+
+    <!-- 하나만 다운로드할 때 -->
+    <!-- <a href="/upload/<%# data.attachfile %>" download>다운로드</a> -->
+    
+    <a href="/board/update/<%- data.num %>">수정</a>
+    <a href="/board/list">목록으로</a>
+</body>
+</html>

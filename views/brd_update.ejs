@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정하기</title>
+</head>
+<body>
+    <!-- 파일첨부 1개만 시킬 때 --> 
+    <!-- <form id="upload" action="/dbupdate" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="num" value="<%- data.num %>">
+        <input type="text" name="title" value="<%- data.title %>">
+        <input type="text" name="author" value="<%- data.author %>">
+        <input type="file" name="thumbnail">
+        <button type="submit">게시글 수정완료</button>
+    </form> -->
+    <!-- 파일첨부 여러 개 시킬 때 -->
+    <form id="upload" action="/dbupdate2" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="num" value="<%- data.num %>">
+        <input type="text" name="title" value="<%- data.title %>" required>
+        <input type="text" name="author" value="<%- data.author %>" required>
+        <input id="file" type="file" name="thumbnail" multiple>
+        <button id="submit" type="submit">게시글 수정완료</button>
+    </form>
+    <script> //파일 여러 개 체크할 때
+        const upload = document.querySelector("#upload"); //데이터 전송역할 form태그
+        const inputFile = document.querySelector("#file"); // 첨부파일 input태그
+        const submitBtn = document.querySelector("#submit"); // 전송버튼
+        const extCheck = [".jpg", ".jpeg", ".png", ".gif"]; // 체크할 확장자명
+
+        // 첨부파일이 n개 -> 첨부한 파일 중 하나라도 체크할 확장자명이 아니라면 업로드 막아야 함
+        let validRequest = false; // 유효성검사용 변수
+        // true일 때 데이터 전송 처리할 역할
+        let validCount = 0; //체크 시 이미지 파일인 경우에만 카운트가 1씩 증가
+
+        submitBtn.addEventListener("click", (e)=>{
+            
+            // 첨부파일 갯수만큼 반복문 처리
+            for(let i=0; i< inputFile.files.length; i++){
+
+                let fileName = inputFile.files[i].name; // i번째 파일명 가져오기
+                
+                let fileLength = fileName.length; // 파일명 길이값(나중에 확장자명 식별할 때 사용)
+
+                let fileDots = fileName.lastIndexOf("."); // .기호가 시작하는 순번
+
+                let fileExts = fileName.substring(fileDots, fileLength); // 추출한 확장자
+                
+                let fileChange = fileExts.toLowerCase(); // 확장자 소문자로 변경
+
+                let result = extCheck.includes(fileChange); //해당 확장명이 위 배열안에 있는지?
+
+                if(result){
+                    validCount++;
+                    if(validCount === inputFile.files.length){
+                        validRequest = true;
+                    }
+                }
+            }
+            if(validRequest){
+                // validRequest 값이 true 라면
+                upload.submit(); //업로드 기능 수행
+            }
+            else{
+                // validRequest 값이 false 라면
+                validCount = 0; //카운트 숫자 초기화
+                alert("이미지 파일만 업로드 가능합니다."); // 경고창
+                e.preventDefault(); // 업로드 기능막고
+            }
+        })
+    </script>
+    <!-- input type="file" 여러 개 사용 시 (응용) -->
+</body>
+</html>
